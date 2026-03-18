@@ -113,47 +113,41 @@ export function StepScore({ analysis, score, progressMessage, onRestart, onBack 
         </div>
       )}
 
-      {/* Caught and missed — compact rows */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden">
+      {/* Caught and missed */}
+      <div className="space-y-6">
         {caughtIssues.length > 0 && (
-          <div>
-            <div className="px-4 py-2.5 bg-neutral-50 border-b border-border flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full bg-black text-white flex items-center justify-center text-[10px]">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-neutral-700 flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-black/10 flex items-center justify-center text-xs text-black">
                 &#10003;
               </span>
-              <span className="text-xs font-semibold text-black">Caught ({caughtIssues.length})</span>
-            </div>
-            {caughtIssues.map((issue, i) => (
+              What you caught
+            </h3>
+            {caughtIssues.map((issue) => (
               <div
                 key={issue.id}
-                className={`px-4 py-2.5 flex items-start gap-2.5 text-sm ${i < caughtIssues.length - 1 || missedIssues.length > 0 ? "border-b border-border" : ""}`}
+                className="pl-7 text-sm text-muted-foreground"
               >
-                <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-500 uppercase mt-0.5">
-                  {issue.category.replace(/_/g, " ")}
-                </span>
-                <span className="text-muted-foreground line-clamp-1">{issue.flaggedText}</span>
+                <span className="text-foreground">{issue.explanation}</span>
               </div>
             ))}
           </div>
         )}
 
         {missedIssues.length > 0 && (
-          <div>
-            <div className="px-4 py-2.5 bg-neutral-50 border-b border-border flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full bg-neutral-200 text-neutral-500 flex items-center justify-center text-[10px]">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-neutral-500 flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-black/5 flex items-center justify-center text-xs text-neutral-500">
                 !
               </span>
-              <span className="text-xs font-semibold text-neutral-400">Missed ({missedIssues.length})</span>
-            </div>
-            {missedIssues.map((issue, i) => (
+              What you missed
+            </h3>
+            {missedIssues.map((issue) => (
               <div
                 key={issue.id}
-                className={`px-4 py-2.5 flex items-start gap-2.5 text-sm ${i < missedIssues.length - 1 ? "border-b border-border" : ""}`}
+                className="pl-7 text-sm text-muted-foreground"
               >
-                <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-50 text-neutral-400 uppercase mt-0.5">
-                  {issue.category.replace(/_/g, " ")}
-                </span>
-                <span className="text-muted-foreground/60 line-clamp-1">{issue.flaggedText}</span>
+                <span className="text-foreground">{issue.explanation}</span>
               </div>
             ))}
           </div>
