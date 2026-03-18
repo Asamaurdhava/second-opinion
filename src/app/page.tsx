@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
 import { ContentType, Step, Session } from "@/lib/types";
 import { getProgressFeedback } from "@/lib/storage";
 import { useAnalysis } from "@/hooks/use-analysis";
@@ -135,6 +136,13 @@ export default function Home() {
           <span className="text-xl font-bold tracking-tight">
             Second Opinion
           </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/how-it-works"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              How it works
+            </Link>
           <div className="flex items-center gap-1">
             {steps.map((s, i) => (
               <div key={s.key} className="flex items-center">
@@ -160,6 +168,7 @@ export default function Home() {
                 )}
               </div>
             ))}
+          </div>
           </div>
         </div>
       </header>
