@@ -39,7 +39,7 @@ export function StepInput({
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="space-y-3">
+      <div className="space-y-3 text-center">
         <p className="text-sm font-medium tracking-widest uppercase text-muted-foreground/60">
           Train your AI judgment
         </p>
@@ -48,7 +48,7 @@ export function StepInput({
           <br />
           <span className="text-black">You need a second opinion.</span>
         </h1>
-        <p className="text-muted-foreground text-lg max-w-lg">
+        <p className="text-muted-foreground text-lg max-w-lg mx-auto">
           Paste AI-generated content. Spot the issues yourself. Then see what you caught, what you missed, and what even the AI didn&apos;t find.
         </p>
       </div>
