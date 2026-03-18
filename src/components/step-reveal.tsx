@@ -50,8 +50,8 @@ export function StepReveal({
       </div>
 
       {/* Risk banner */}
-      <div className="bg-card border border-border rounded-xl p-4 flex items-start gap-3">
-        <span className="shrink-0 mt-0.5 text-sm font-semibold bg-black text-white px-2.5 py-0.5 rounded-full">
+      <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3">
+        <span className="shrink-0 text-sm font-semibold bg-black text-white px-2.5 py-0.5 rounded-full">
           {risk.label}
         </span>
         <p className="text-sm text-muted-foreground leading-relaxed">
