@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Second Opinion — Train Your AI Judgment",
   description:
     "You don't need a better AI. You need a second opinion. Learn to critically evaluate AI-generated content.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
