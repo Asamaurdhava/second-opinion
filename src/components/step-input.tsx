@@ -51,12 +51,13 @@ export function StepInput({
         <p className="text-muted-foreground text-lg max-w-lg mx-auto">
           Paste AI-generated content. Spot the issues yourself. Then see what you caught, what you missed, and what even the AI didn&apos;t find.
         </p>
-        <div className="max-w-md mx-auto space-y-1">
-          <p className="text-sm text-black/70">
+        <div className="max-w-md mx-auto">
+          <p className="text-sm italic text-black/70">
             &ldquo;Over half of Americans can&apos;t tell if content was made by AI or a human.&rdquo;
           </p>
-          <p className="text-[10px] text-muted-foreground/40">
-            <a href="https://www.pewresearch.org/science/2025/09/17/how-americans-view-ai-and-its-impact-on-people-and-society/" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground transition-colors">Pew Research, 2025</a>
+          <p className="text-[11px] mt-1">
+            <span className="text-black/40">— </span>
+            <a href="https://www.pewresearch.org/science/2025/09/17/how-americans-view-ai-and-its-impact-on-people-and-society/" target="_blank" rel="noopener noreferrer" className="text-black font-medium hover:underline transition-colors">Pew Research, 2025</a>
           </p>
         </div>
       </div>
