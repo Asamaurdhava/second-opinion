@@ -78,7 +78,7 @@ export default function HowItWorks() {
               <div className="space-y-3">
                 <div>
                   <h2 className="text-xl font-bold">Paste AI-generated content</h2>
-                  <p className="text-sm text-muted-foreground">Pick a content type and submit.</p>
+                  <p className="text-sm text-muted-foreground">Pick a content type and submit. Optionally tell us which AI made it — the analysis adapts to known weaknesses of each model.</p>
                 </div>
                 <div className="bg-card border border-border rounded-xl p-4">
                   <p className="text-xs text-muted-foreground/50 mb-2 uppercase tracking-wide">Example: Email by Claude</p>
