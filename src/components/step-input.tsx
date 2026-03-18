@@ -78,7 +78,7 @@ export function StepInput({
             onSubmit(content, contentType, source);
           }
         }}
-        className="min-h-[200px] font-mono text-sm bg-card border-border resize-y"
+        className="min-h-[200px] font-mono text-sm bg-card border border-black/20 rounded-xl resize-y focus:border-black/40 focus:shadow-[0_0_10px_rgba(0,0,0,0.08)] transition-all"
       />
 
       <div className="space-y-3">
@@ -110,7 +110,7 @@ export function StepInput({
           placeholder="ChatGPT, Copilot, Claude, etc."
           value={source}
           onChange={(e) => setSource(e.target.value)}
-          className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/20 transition-all"
+          className="w-full bg-card border border-black/20 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-black/40 focus:shadow-[0_0_10px_rgba(0,0,0,0.08)] transition-all"
         />
       </div>
 

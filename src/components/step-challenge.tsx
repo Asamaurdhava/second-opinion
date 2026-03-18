@@ -71,7 +71,7 @@ export function StepChallenge({
               onSubmit(assessment);
             }
           }}
-          className="min-h-[140px] bg-card border-border text-sm resize-y"
+          className="min-h-[140px] bg-card border border-black/20 rounded-xl text-sm resize-y focus:border-black/40 focus:shadow-[0_0_10px_rgba(0,0,0,0.08)] transition-all"
         />
         <p className="text-xs text-muted-foreground/60">
           Think critically. What would you flag if you were reviewing this for
