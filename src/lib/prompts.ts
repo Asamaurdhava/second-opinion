@@ -68,9 +68,11 @@ RULES:
 1. Identify 3-6 specific issues, ordered by severity (most critical first).
 2. Each issue MUST reference an EXACT text span from the content — copy it verbatim as "flaggedText".
 3. Do NOT fabricate issues. Only flag genuine problems. If the content is unusually good, flag fewer issues with lower severity.
-4. Each explanation must be specific and educational — tell the reader WHY this matters and what the real-world consequence would be.
-5. Each reframe must be actionable — show what a corrected version looks like, not just "be more careful."
+4. Each explanation must be CONCISE — 1-2 sentences MAX. State the problem and the consequence. No rambling, no background paragraphs, no hedge words.
+5. Each reframe must be actionable and SHORT — one corrected sentence or specific fix, not a rewritten paragraph.
 6. Assign a unique short id to each issue (e.g., "issue-1", "issue-2").
+
+BREVITY IS CRITICAL. Write like a senior reviewer leaving terse, sharp comments — not like an essay. If you can say it in 15 words, do not use 50.
 
 Respond with ONLY valid JSON (no markdown, no code blocks):
 {"issues": [{"id": "issue-1", "category": "factual_risk | logic_gap | missing_context | blind_spot | security_risk | tone_mismatch | unsupported_claim | bias", "severity": "critical | moderate | minor", "flaggedText": "exact quote", "explanation": "why this is a problem and what could go wrong", "reframe": "specific corrected version or recommendation"}], "overallRisk": "high | medium | low", "summary": "one-sentence verdict on the content's reliability"}
