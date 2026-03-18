@@ -139,36 +139,38 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <Link
               href="/how-it-works"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
             >
               How it works
             </Link>
-          <div className="flex items-center gap-1">
-            {steps.map((s, i) => (
-              <div key={s.key} className="flex items-center">
-                <button
-                  type="button"
-                  onClick={() => goToStep(i)}
-                  disabled={i > furthestStep || (i === 2 && !analysis) || (i === 3 && !score)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i <= currentStepIndex
-                      ? "bg-black"
-                      : "bg-neutral-300"
-                  } ${i <= furthestStep ? "cursor-pointer hover:scale-150" : "cursor-default"}`}
-                  title={s.label}
-                />
-                {i < steps.length - 1 && (
-                  <div
-                    className={`w-6 h-px mx-1 transition-all duration-300 ${
-                      i < currentStepIndex
+            <div className="w-px h-4 bg-border" />
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] text-muted-foreground/50 mr-1.5 uppercase tracking-wide">Progress</span>
+              {steps.map((s, i) => (
+                <div key={s.key} className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => goToStep(i)}
+                    disabled={i > furthestStep || (i === 2 && !analysis) || (i === 3 && !score)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      i <= currentStepIndex
                         ? "bg-black"
                         : "bg-neutral-300"
-                    }`}
+                    } ${i <= furthestStep ? "cursor-pointer hover:scale-150" : "cursor-default"}`}
+                    title={s.label}
                   />
-                )}
-              </div>
-            ))}
-          </div>
+                  {i < steps.length - 1 && (
+                    <div
+                      className={`w-6 h-px mx-1 transition-all duration-300 ${
+                        i < currentStepIndex
+                          ? "bg-black"
+                          : "bg-neutral-300"
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </header>
