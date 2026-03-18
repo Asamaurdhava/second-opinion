@@ -5,19 +5,22 @@ import Link from "next/link";
 
 export default function HowItWorks() {
   const timelineRef = useRef<HTMLDivElement>(null);
-  const [fillHeight, setFillHeight] = useState(0);
+  const step4Ref = useRef<HTMLDivElement>(null);
+  const [fillPx, setFillPx] = useState(0);
+  const [maxPx, setMaxPx] = useState(0);
 
   useEffect(() => {
     function handleScroll() {
-      if (!timelineRef.current) return;
-      const rect = timelineRef.current.getBoundingClientRect();
-      const timelineTop = rect.top;
-      const timelineHeight = rect.height;
+      if (!timelineRef.current || !step4Ref.current) return;
+      const timelineRect = timelineRef.current.getBoundingClientRect();
+      const step4Rect = step4Ref.current.getBoundingClientRect();
+      // Max height = distance from timeline top to center of step 4 circle
+      const maxHeight = step4Rect.top - timelineRect.top + step4Rect.height / 2;
+      setMaxPx(maxHeight);
       // Fill point is 40% down the viewport
       const triggerY = window.innerHeight * 0.4;
-      const scrolled = triggerY - timelineTop;
-      const pct = Math.max(0, Math.min(1, scrolled / timelineHeight));
-      setFillHeight(pct * 100);
+      const scrolled = triggerY - timelineRect.top;
+      setFillPx(Math.max(0, Math.min(scrolled, maxHeight)));
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -55,13 +58,13 @@ export default function HowItWorks() {
 
           {/* Timeline container */}
           <div ref={timelineRef} className="relative pl-[52px]">
-            {/* Background line — stops at step 4 circle */}
-            <div className="absolute left-[19px] top-0 w-[2px] bg-neutral-200" style={{ bottom: "32px" }} />
-            {/* Glowing fill line — capped to not go past step 4 */}
+            {/* Background line — stops at step 4 circle center */}
+            <div className="absolute left-[19px] top-0 w-[2px] bg-neutral-200" style={{ height: `${maxPx}px` }} />
+            {/* Glowing fill line — capped at step 4 circle center */}
             <div
               className="absolute left-[19px] top-0 w-[2px] transition-none"
               style={{
-                height: `min(${fillHeight}%, calc(100% - 32px))`,
+                height: `${fillPx}px`,
                 background: "linear-gradient(to bottom, #000 60%, rgba(0,0,0,0.6))",
                 boxShadow: "0 0 8px rgba(0,0,0,0.3), 0 0 20px rgba(0,0,0,0.15)",
               }}
@@ -170,7 +173,7 @@ Best regards, Sarah`}
 
             {/* Step 4 */}
             <div className="relative pb-8">
-              <div className="absolute -left-[52px] w-10 h-10 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center z-10 ring-4 ring-white">
+              <div ref={step4Ref} className="absolute -left-[52px] w-10 h-10 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center z-10 ring-4 ring-white">
                 4
               </div>
               <div className="space-y-3">
