@@ -113,43 +113,47 @@ export function StepScore({ analysis, score, progressMessage, onRestart, onBack 
         </div>
       )}
 
-      {/* Caught and missed */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Caught and missed — compact rows */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
         {caughtIssues.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-black flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-xs">
+          <div>
+            <div className="px-4 py-2.5 bg-neutral-50 border-b border-border flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-black text-white flex items-center justify-center text-[10px]">
                 &#10003;
               </span>
-              Caught ({caughtIssues.length})
-            </h3>
+              <span className="text-xs font-semibold text-black">Caught ({caughtIssues.length})</span>
+            </div>
             {caughtIssues.map((issue, i) => (
               <div
                 key={issue.id}
-                className="text-sm text-muted-foreground pl-7 animate-in fade-in slide-in-from-left-2 duration-300"
-                style={{ animationDelay: `${i * 100}ms` }}
+                className={`px-4 py-2.5 flex items-start gap-2.5 text-sm ${i < caughtIssues.length - 1 || missedIssues.length > 0 ? "border-b border-border" : ""}`}
               >
-                {issue.explanation}
+                <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-500 uppercase mt-0.5">
+                  {issue.category.replace(/_/g, " ")}
+                </span>
+                <span className="text-muted-foreground line-clamp-1">{issue.flaggedText}</span>
               </div>
             ))}
           </div>
         )}
 
         {missedIssues.length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-neutral-400 flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-neutral-100 text-neutral-400 flex items-center justify-center text-xs">
+          <div>
+            <div className="px-4 py-2.5 bg-neutral-50 border-b border-border flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-neutral-200 text-neutral-500 flex items-center justify-center text-[10px]">
                 !
               </span>
-              Missed ({missedIssues.length})
-            </h3>
+              <span className="text-xs font-semibold text-neutral-400">Missed ({missedIssues.length})</span>
+            </div>
             {missedIssues.map((issue, i) => (
               <div
                 key={issue.id}
-                className="text-sm text-muted-foreground/70 pl-7 animate-in fade-in slide-in-from-right-2 duration-300"
-                style={{ animationDelay: `${i * 100}ms` }}
+                className={`px-4 py-2.5 flex items-start gap-2.5 text-sm ${i < missedIssues.length - 1 ? "border-b border-border" : ""}`}
               >
-                {issue.explanation}
+                <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-50 text-neutral-400 uppercase mt-0.5">
+                  {issue.category.replace(/_/g, " ")}
+                </span>
+                <span className="text-muted-foreground/60 line-clamp-1">{issue.flaggedText}</span>
               </div>
             ))}
           </div>
