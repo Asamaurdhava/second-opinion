@@ -53,6 +53,31 @@ export function StepInput({
         </p>
       </div>
 
+      {/* How It Works */}
+      <div className="grid grid-cols-4 gap-3 text-center">
+        {[
+          { step: "1", title: "Paste", desc: "Drop in any AI-generated content" },
+          { step: "2", title: "Question", desc: "Write what YOU think is wrong" },
+          { step: "3", title: "Reveal", desc: "See what the analysis found" },
+          { step: "4", title: "Score", desc: "Compare your judgment vs AI" },
+        ].map((s, i) => (
+          <div key={s.step} className="relative">
+            <div className="flex flex-col items-center gap-2 py-4 px-2">
+              <span className="w-8 h-8 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center">
+                {s.step}
+              </span>
+              <span className="text-sm font-semibold">{s.title}</span>
+              <span className="text-xs text-muted-foreground leading-snug">{s.desc}</span>
+            </div>
+            {i < 3 && (
+              <div className="absolute top-8 -right-1.5 w-3 h-px bg-neutral-300 hidden sm:block" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="border-t border-border" />
+
       <div className="flex flex-wrap gap-2">
         <span className="text-sm text-muted-foreground self-center">
           Try an example:
