@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ContentType, Step, Session } from "@/lib/types";
 import { getProgressFeedback } from "@/lib/storage";
 import { useAnalysis } from "@/hooks/use-analysis";
@@ -110,6 +110,24 @@ export default function Home() {
     reset();
   }, [reset]);
 
+  // Keyboard shortcuts: Escape to go back
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      // Don't capture if user is typing in an input/textarea
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "TEXTAREA" || tag === "INPUT") return;
+
+      if (e.key === "Escape") {
+        e.preventDefault();
+        if (step === "challenge") goToStep(0);
+        else if (step === "reveal") goToStep(1);
+        else if (step === "score") goToStep(2);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-border py-4 px-6">
@@ -183,9 +201,38 @@ export default function Home() {
           )}
 
           {step === "reveal" && !analysis && isAnalyzing && (
-            <div className="flex flex-col items-center justify-center py-20 gap-4 animate-in fade-in duration-300">
-              <div className="w-8 h-8 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-              <p className="text-muted-foreground">Analyzing content...</p>
+            <div className="space-y-6 animate-in fade-in duration-300">
+              <div className="space-y-2">
+                <div className="h-8 w-48 bg-neutral-200 rounded animate-pulse" />
+                <div className="h-4 w-96 bg-neutral-100 rounded animate-pulse" />
+              </div>
+              <div className="bg-card border border-border rounded-xl p-4">
+                <div className="h-4 w-32 bg-neutral-200 rounded animate-pulse mb-2" />
+                <div className="h-3 w-full bg-neutral-100 rounded animate-pulse" />
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="h-3 bg-neutral-100 rounded animate-pulse" style={{ width: `${85 - i * 8}%`, animationDelay: `${i * 150}ms` }} />
+                  ))}
+                </div>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-card border border-border rounded-xl p-4 space-y-2 animate-pulse" style={{ animationDelay: `${i * 200}ms` }}>
+                      <div className="flex gap-2">
+                        <div className="h-5 w-16 bg-neutral-200 rounded-full" />
+                        <div className="h-5 w-20 bg-neutral-100 rounded-full" />
+                      </div>
+                      <div className="h-3 w-full bg-neutral-100 rounded" />
+                      <div className="h-3 w-3/4 bg-neutral-100 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-3 pt-4">
+                <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                <p className="text-sm text-muted-foreground">Deep analysis in progress...</p>
+              </div>
             </div>
           )}
 
@@ -200,9 +247,23 @@ export default function Home() {
           )}
 
           {step === "score" && isScoring && (
-            <div className="flex flex-col items-center justify-center py-20 gap-4 animate-in fade-in duration-300">
-              <div className="w-8 h-8 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-              <p className="text-muted-foreground">Scoring your assessment...</p>
+            <div className="space-y-8 animate-in fade-in duration-300">
+              <div className="space-y-2 text-center">
+                <div className="h-8 w-56 bg-neutral-200 rounded animate-pulse mx-auto" />
+                <div className="h-4 w-80 bg-neutral-100 rounded animate-pulse mx-auto" />
+              </div>
+              <div className="flex justify-center">
+                <div className="w-32 h-32 rounded-full border-4 border-neutral-200 animate-pulse" />
+              </div>
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-4 bg-neutral-100 rounded animate-pulse mx-auto" style={{ width: `${70 - i * 10}%`, animationDelay: `${i * 150}ms` }} />
+                ))}
+              </div>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                <p className="text-sm text-muted-foreground">Comparing your assessment...</p>
+              </div>
             </div>
           )}
         </div>

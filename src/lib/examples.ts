@@ -87,4 +87,92 @@ Risk assessment: LOW. The company has strong product-market fit domestically, an
 
 Timeline: Begin hiring a European sales team in Q1, launch in UK by Q2, expand to DACH region by Q4.`,
   },
+  {
+    label: "SQL Query",
+    contentType: "code",
+    source: "Copilot",
+    content: `-- Get top customers by revenue with their recent orders
+SELECT
+    c.customer_id,
+    c.name,
+    c.email,
+    SUM(o.total_amount) as lifetime_value,
+    COUNT(o.order_id) as total_orders,
+    MAX(o.created_at) as last_order_date
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.status = 'completed'
+    AND o.created_at >= '2024-01-01'
+GROUP BY c.customer_id, c.name, c.email
+HAVING SUM(o.total_amount) > 1000
+ORDER BY lifetime_value DESC
+LIMIT 50;
+
+-- Delete inactive users who haven't logged in
+DELETE FROM users
+WHERE last_login < NOW() - INTERVAL '6 months'
+    AND account_type = 'free';
+
+-- Update pricing for all products in a category
+UPDATE products
+SET price = price * 1.15,
+    updated_at = NOW()
+WHERE category_id IN (SELECT id FROM categories WHERE name LIKE '%premium%');`,
+  },
+  {
+    label: "Legal Summary",
+    contentType: "writing",
+    source: "ChatGPT",
+    content: `Summary of Non-Disclosure Agreement (NDA) between PartyA Corp and PartyB LLC
+
+This NDA establishes mutual confidentiality obligations between both parties effective January 1, 2025.
+
+Key Terms:
+- Duration: 2 years from the effective date, with confidentiality obligations surviving for 5 years after termination
+- Scope: Covers all proprietary information shared verbally, in writing, or electronically
+- Exclusions: Information that is publicly available, independently developed, or received from a third party without restriction
+- Permitted Disclosure: Either party may share confidential information with employees and contractors who "need to know" for the purpose of the business relationship
+- Remedies: The injured party is entitled to seek injunctive relief and monetary damages
+- Governing Law: State of Delaware
+
+Notable Clauses:
+- Non-solicitation of employees for 18 months after termination
+- Automatic renewal unless either party provides 30 days written notice
+- Neither party may assign this agreement without prior written consent
+
+Risk Assessment: This is a standard mutual NDA with reasonable terms. Recommend signing without modifications.`,
+  },
+  {
+    label: "Product Spec",
+    contentType: "analysis",
+    source: "Claude",
+    content: `Product Requirements Document: AI-Powered Customer Support Chatbot
+
+Overview:
+Build an AI chatbot that handles 80% of customer support tickets without human intervention, reducing support costs by 60% within 6 months of deployment.
+
+Technical Architecture:
+- Frontend: React widget embedded in existing website
+- Backend: Node.js API server with WebSocket for real-time chat
+- AI: Fine-tuned GPT-4 model on our support ticket history (50,000 tickets)
+- Database: MongoDB for conversation storage, Redis for session management
+- Deployment: AWS ECS with auto-scaling
+
+Key Features:
+1. Natural language understanding for ticket classification
+2. Automated responses for common issues (password reset, billing, shipping)
+3. Seamless handoff to human agent when confidence is below 85%
+4. Sentiment analysis to prioritize frustrated customers
+5. Multi-language support (English, Spanish, French) from day one
+
+Timeline: 8 weeks from kickoff to production
+Team: 2 backend engineers, 1 frontend engineer, 1 ML engineer
+Budget: $45,000 total (infrastructure + development)
+
+Success Metrics:
+- Ticket resolution rate: >80% automated
+- Customer satisfaction: Maintain current CSAT of 4.2/5
+- Response time: <5 seconds for first response
+- Cost reduction: 60% within 6 months`,
+  },
 ];

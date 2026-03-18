@@ -19,8 +19,19 @@ export function ScoreRing({
   const offset = circumference - (animatedPercent / 100) * circumference;
 
   useEffect(() => {
-    const timer = setTimeout(() => setAnimatedPercent(percentage), 100);
-    return () => clearTimeout(timer);
+    // Animate the number counting up
+    const duration = 1000;
+    const start = performance.now();
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setAnimatedPercent(Math.round(eased * percentage));
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    const delay = setTimeout(() => requestAnimationFrame(tick), 100);
+    return () => clearTimeout(delay);
   }, [percentage]);
 
   return (

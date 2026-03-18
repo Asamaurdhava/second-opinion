@@ -39,13 +39,17 @@ export function StepInput({
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="space-y-2">
+      <div className="space-y-3">
+        <p className="text-sm font-medium tracking-widest uppercase text-muted-foreground/60">
+          Train your AI judgment
+        </p>
         <h1 className="text-4xl font-bold tracking-tight">
-          Get a Second Opinion
+          You don&apos;t need a better AI.
+          <br />
+          <span className="text-black">You need a second opinion.</span>
         </h1>
-        <p className="text-muted-foreground text-lg">
-          Paste AI-generated content below and learn to spot what you might have
-          missed.
+        <p className="text-muted-foreground text-lg max-w-lg">
+          Paste AI-generated content. Spot the issues yourself. Then see what you caught, what you missed, and what even the AI didn&apos;t find.
         </p>
       </div>
 
@@ -68,6 +72,12 @@ export function StepInput({
         placeholder="Paste AI-generated content here..."
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        onKeyDown={(e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && content.trim()) {
+            e.preventDefault();
+            onSubmit(content, contentType, source);
+          }
+        }}
         className="min-h-[200px] font-mono text-sm bg-card border-border resize-y"
       />
 
@@ -113,6 +123,9 @@ export function StepInput({
       >
         Get a Second Opinion
       </button>
+      <p className="text-xs text-center text-muted-foreground/50">
+        Press <kbd className="px-1.5 py-0.5 bg-neutral-100 border border-border rounded text-[10px] font-mono">Cmd+Enter</kbd> to submit
+      </p>
     </div>
   );
 }

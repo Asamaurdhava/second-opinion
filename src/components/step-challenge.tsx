@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +12,12 @@ interface StepChallengeProps {
   isLoading: boolean;
 }
 
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
 export function StepChallenge({
   content,
   initialAssessment = "",
@@ -20,13 +26,29 @@ export function StepChallenge({
   isLoading,
 }: StepChallengeProps) {
   const [assessment, setAssessment] = useState(initialAssessment);
+  const [elapsed, setElapsed] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setElapsed((prev) => prev + 1);
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Before we analyze this...
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">
+            Before we analyze this...
+          </h1>
+          <span className="text-sm font-mono text-muted-foreground tabular-nums">
+            {formatTime(elapsed)}
+          </span>
+        </div>
         <p className="text-muted-foreground text-lg">
           What concerns do <span className="text-black font-semibold">you</span> have?
         </p>
@@ -43,6 +65,12 @@ export function StepChallenge({
           placeholder="What might be wrong? What assumptions is this making? What's missing?"
           value={assessment}
           onChange={(e) => setAssessment(e.target.value)}
+          onKeyDown={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && assessment.trim() && !isLoading) {
+              e.preventDefault();
+              onSubmit(assessment);
+            }
+          }}
           className="min-h-[140px] bg-card border-border text-sm resize-y"
         />
         <p className="text-xs text-muted-foreground/60">
