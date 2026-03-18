@@ -1,110 +1,34 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-const STEPS = [
-  {
-    number: "01",
-    title: "Paste",
-    headline: "Drop in AI-generated content",
-    description:
-      "Code, emails, analysis, writing — anything an AI produced. Pick a content type and hit submit.",
-    detail: "We support ChatGPT, Copilot, Claude, Gemini, or any other AI tool.",
-  },
-  {
-    number: "02",
-    title: "Question",
-    headline: "Write what YOU think is wrong",
-    description:
-      "Before we show you anything, you tell us your concerns. This is the step that builds judgment — you think first, not the machine.",
-    detail:
-      "This is the core differentiator. No other tool asks you to think before giving you the answer.",
-  },
-  {
-    number: "03",
-    title: "Reveal",
-    headline: "See what deep analysis found",
-    description:
-      "Our AI reviewer (Claude Opus) identifies 3-6 specific issues — exact text spans, explanations, and suggested fixes. Highlighted inline on the original content.",
-    detail:
-      "Issues are categorized: Logic Gap, Factual Risk, Missing Context, Blind Spot, Unsupported Claim, Bias, Security Risk, Tone Mismatch.",
-  },
-  {
-    number: "04",
-    title: "Score",
-    headline: "See how your judgment stacks up",
-    description:
-      "Your Step 2 assessment is compared against the analysis. You get a catch rate, see what you caught, what you missed, and — the best part — what you found that the AI didn't.",
-    detail:
-      "Your catch rate improves over sessions. That's measurable judgment growth.",
-  },
-];
-
-const EXAMPLE_WALKTHROUGH = {
-  input: `Subject: Q3 Performance Review
-
-Hi Team,
-
-Our revenue grew by 15% compared to last quarter, putting us well ahead of our annual target of 40% YoY growth.
-
-Key highlights:
-- Customer acquisition cost dropped to $45
-- Net Promoter Score increased to 72, "world-class" category
-- We shipped 23 features, completing 100% of our roadmap
-
-I recommend we accelerate our Series B timeline and increase hiring targets by 30% across all departments. Competitors are struggling.
-
-Best regards, Sarah`,
-  userAssessment: `"The 100% roadmap completion seems unrealistic. The Series B recommendation feels too aggressive for one quarter of data. 'Competitors are struggling' has no evidence."`,
-  issues: [
-    {
-      severity: "CRITICAL",
-      category: "Logic Gap",
-      text: "15% QoQ ≠ 40% YoY",
-      caught: false,
-    },
-    {
-      severity: "CRITICAL",
-      category: "Blind Spot",
-      text: "Series B + 30% hiring — major call, one quarter of data",
-      caught: true,
-    },
-    {
-      severity: "MODERATE",
-      category: "Unsupported",
-      text: '"World-class" NPS — no benchmark cited',
-      caught: false,
-    },
-    {
-      severity: "MODERATE",
-      category: "Unsupported",
-      text: '"Competitors are struggling" — zero evidence',
-      caught: true,
-    },
-    {
-      severity: "MODERATE",
-      category: "Missing Context",
-      text: "CAC of $45 — no LTV ratio given",
-      caught: false,
-    },
-    {
-      severity: "MODERATE",
-      category: "Bias",
-      text: "100% roadmap — were features cut? No quality metrics",
-      caught: true,
-    },
-  ],
-  uniqueFind:
-    "One quarter isn't enough data to make major strategic decisions",
-  catchRate: 50,
-};
-
 export default function HowItWorks() {
-  const caught = EXAMPLE_WALKTHROUGH.issues.filter((i) => i.caught).length;
-  const total = EXAMPLE_WALKTHROUGH.issues.length;
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const [fillHeight, setFillHeight] = useState(0);
+
+  useEffect(() => {
+    function handleScroll() {
+      if (!timelineRef.current) return;
+      const rect = timelineRef.current.getBoundingClientRect();
+      const timelineTop = rect.top;
+      const timelineHeight = rect.height;
+      // Fill point is 40% down the viewport
+      const triggerY = window.innerHeight * 0.4;
+      const scrolled = triggerY - timelineTop;
+      const pct = Math.max(0, Math.min(1, scrolled / timelineHeight));
+      setFillHeight(pct * 100);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-border py-4 px-6">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
           <Link href="/" className="text-xl font-bold tracking-tight hover:opacity-70 transition-opacity">
             Second Opinion
           </Link>
@@ -118,263 +42,198 @@ export default function HowItWorks() {
       </header>
 
       <main className="flex-1 py-16 px-6">
-        <div className="max-w-3xl mx-auto space-y-20">
+        <div className="max-w-2xl mx-auto">
           {/* Hero */}
-          <div className="text-center space-y-4">
-            <p className="text-sm font-medium tracking-widest uppercase text-muted-foreground/60">
-              How It Works
-            </p>
+          <div className="text-center space-y-3 mb-16">
             <h1 className="text-4xl font-bold tracking-tight">
-              Four steps to sharper judgment
+              How It Works
             </h1>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Every other AI tool gives you an answer. Second Opinion gives you
-              the skill to know when the answer is wrong.
+            <p className="text-muted-foreground text-lg">
+              Four steps. One example. See the whole flow.
             </p>
           </div>
 
-          {/* 4 Steps */}
-          <div className="space-y-12">
-            {STEPS.map((step, i) => (
-              <div key={step.number} className="flex gap-6">
-                <div className="flex flex-col items-center">
-                  <span className="w-12 h-12 rounded-full bg-black text-white text-lg font-bold flex items-center justify-center shrink-0">
-                    {step.number}
-                  </span>
-                  {i < STEPS.length - 1 && (
-                    <div className="w-px flex-1 bg-neutral-200 mt-3" />
-                  )}
+          {/* Timeline container */}
+          <div ref={timelineRef} className="relative pl-[52px]">
+            {/* Background line — stops at step 4 circle */}
+            <div className="absolute left-[19px] top-0 w-[2px] bg-neutral-200" style={{ bottom: "32px" }} />
+            {/* Glowing fill line — capped to not go past step 4 */}
+            <div
+              className="absolute left-[19px] top-0 w-[2px] transition-none"
+              style={{
+                height: `min(${fillHeight}%, calc(100% - 32px))`,
+                background: "linear-gradient(to bottom, #000 60%, rgba(0,0,0,0.6))",
+                boxShadow: "0 0 8px rgba(0,0,0,0.3), 0 0 20px rgba(0,0,0,0.15)",
+              }}
+            />
+
+            {/* Step 1 */}
+            <div className="relative pb-16">
+              <div className="absolute -left-[52px] w-10 h-10 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center z-10 ring-4 ring-white">
+                1
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-xl font-bold">Paste AI-generated content</h2>
+                  <p className="text-sm text-muted-foreground">Pick a content type and submit.</p>
                 </div>
-                <div className="pb-12 space-y-2">
-                  <p className="text-xs font-medium tracking-widest uppercase text-muted-foreground/50">
-                    {step.title}
-                  </p>
-                  <h2 className="text-2xl font-bold">{step.headline}</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {step.description}
-                  </p>
-                  <p className="text-sm text-muted-foreground/60 italic">
-                    {step.detail}
-                  </p>
+                <div className="bg-card border border-border rounded-xl p-4">
+                  <p className="text-xs text-muted-foreground/50 mb-2 uppercase tracking-wide">Example: Email by Claude</p>
+                  <pre className="font-mono text-xs whitespace-pre-wrap text-muted-foreground leading-relaxed">
+{`Subject: Q3 Performance Review
+
+Hi Team,
+
+Our revenue grew by 15% compared to last quarter,
+putting us well ahead of our annual target of 40% YoY growth.
+
+Key highlights:
+- Customer acquisition cost dropped to $45
+- NPS increased to 72, "world-class" category
+- We shipped 23 features, completing 100% of our roadmap
+
+I recommend we accelerate our Series B timeline and
+increase hiring targets by 30% across all departments.
+Competitors are struggling.
+
+Best regards, Sarah`}
+                  </pre>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-border" />
-
-          {/* Example Walkthrough */}
-          <div className="space-y-10">
-            <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight">
-                See it in action
-              </h2>
-              <p className="text-muted-foreground">
-                Here&apos;s a real example using an AI-generated email
-              </p>
             </div>
 
-            {/* The input */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">
-                  1
-                </span>
-                <h3 className="text-sm font-semibold uppercase tracking-wide">
-                  The AI-generated email
-                </h3>
+            {/* Step 2 */}
+            <div className="relative pb-16">
+              <div className="absolute -left-[52px] w-10 h-10 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center z-10 ring-4 ring-white">
+                2
               </div>
-              <div className="bg-card border border-border rounded-xl p-5">
-                <pre className="font-mono text-sm whitespace-pre-wrap text-muted-foreground leading-relaxed">
-                  {EXAMPLE_WALKTHROUGH.input}
-                </pre>
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-xl font-bold">Write what YOU think is wrong</h2>
+                  <p className="text-sm text-muted-foreground">Before seeing any analysis. This is the step that builds judgment.</p>
+                </div>
+                <div className="bg-card border border-border rounded-xl p-4">
+                  <p className="text-xs text-muted-foreground/50 mb-2 uppercase tracking-wide">Example: User wrote</p>
+                  <p className="text-sm italic text-muted-foreground leading-relaxed">
+                    &ldquo;The 100% roadmap completion seems unrealistic. The Series B recommendation
+                    feels too aggressive for one quarter of data. &lsquo;Competitors are struggling&rsquo;
+                    has no evidence.&rdquo;
+                  </p>
+                  <p className="text-xs text-muted-foreground/40 mt-3">Time taken: 1:45</p>
+                </div>
               </div>
             </div>
 
-            {/* The user's assessment */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">
-                  2
-                </span>
-                <h3 className="text-sm font-semibold uppercase tracking-wide">
-                  What the user wrote
-                </h3>
+            {/* Step 3 */}
+            <div className="relative pb-16">
+              <div className="absolute -left-[52px] w-10 h-10 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center z-10 ring-4 ring-white">
+                3
               </div>
-              <div className="bg-card border border-border rounded-xl p-5">
-                <p className="text-sm italic text-muted-foreground leading-relaxed">
-                  {EXAMPLE_WALKTHROUGH.userAssessment}
-                </p>
-              </div>
-            </div>
-
-            {/* The reveal */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">
-                  3
-                </span>
-                <h3 className="text-sm font-semibold uppercase tracking-wide">
-                  What the analysis found
-                </h3>
-              </div>
-              <div className="space-y-2">
-                {EXAMPLE_WALKTHROUGH.issues.map((issue, i) => (
-                  <div
-                    key={i}
-                    className="bg-card border border-border rounded-xl p-4 flex items-start gap-3"
-                  >
-                    <span
-                      className={`shrink-0 text-xs font-bold px-2 py-0.5 rounded-full ${
-                        issue.severity === "CRITICAL"
-                          ? "bg-black text-white"
-                          : "bg-neutral-100 text-neutral-600"
-                      }`}
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-xl font-bold">See what the analysis found</h2>
+                  <p className="text-sm text-muted-foreground">Issues highlighted inline on the original text.</p>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { severity: "CRITICAL", category: "Logic Gap", text: "15% QoQ growth \u2260 being \"well ahead\" of 40% YoY target" },
+                    { severity: "CRITICAL", category: "Blind Spot", text: "Accelerate Series B + 30% hiring \u2014 major strategic call from one quarter" },
+                    { severity: "MODERATE", category: "Unsupported", text: "\"World-class\" NPS \u2014 no industry benchmark cited" },
+                    { severity: "MODERATE", category: "Unsupported", text: "\"Competitors are struggling\" \u2014 zero evidence" },
+                    { severity: "MODERATE", category: "Missing Context", text: "CAC of $45 with no LTV ratio \u2014 meaningless alone" },
+                    { severity: "MODERATE", category: "Bias", text: "100% roadmap complete \u2014 were features cut? No quality metrics" },
+                  ].map((issue, i) => (
+                    <div
+                      key={i}
+                      className="bg-card border border-border rounded-lg p-3 flex items-start gap-3"
                     >
-                      {issue.severity}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-xs text-muted-foreground/50 uppercase tracking-wide">
-                        {issue.category}
+                      <span
+                        className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          issue.severity === "CRITICAL"
+                            ? "bg-black text-white"
+                            : "bg-neutral-100 text-neutral-600"
+                        }`}
+                      >
+                        {issue.severity}
                       </span>
-                      <p className="text-sm mt-0.5">{issue.text}</p>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-muted-foreground/40 uppercase tracking-wide">
+                          {issue.category}
+                        </span>
+                        <p className="text-sm">{issue.text}</p>
+                      </div>
                     </div>
-                    <span
-                      className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${
-                        issue.caught
-                          ? "bg-black/5 text-black"
-                          : "bg-neutral-50 text-neutral-400"
-                      }`}
-                    >
-                      {issue.caught ? "Caught" : "Missed"}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* The score */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">
-                  4
-                </span>
-                <h3 className="text-sm font-semibold uppercase tracking-wide">
-                  The scorecard
-                </h3>
+            {/* Step 4 */}
+            <div className="relative pb-8">
+              <div className="absolute -left-[52px] w-10 h-10 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center z-10 ring-4 ring-white">
+                4
               </div>
-              <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-3xl font-bold">{EXAMPLE_WALKTHROUGH.catchRate}%</p>
-                    <p className="text-sm text-muted-foreground">catch rate</p>
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-xl font-bold">See how your judgment stacks up</h2>
+                  <p className="text-sm text-muted-foreground">What you caught, what you missed, and what even the AI didn&apos;t find.</p>
+                </div>
+
+                {/* Score */}
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <p className="text-3xl font-bold">50%</p>
+                      <p className="text-sm text-muted-foreground">catch rate</p>
+                    </div>
+                    <p className="text-lg font-semibold">3 of 6 issues</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold">
-                      {caught} of {total} issues
-                    </p>
-                    <p className="text-sm text-muted-foreground">identified</p>
+                  <div className="w-full bg-neutral-100 rounded-full h-2">
+                    <div className="bg-black h-2 rounded-full" style={{ width: "50%" }} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+                    <div>
+                      <p className="font-semibold text-black mb-1">Caught</p>
+                      <ul className="text-muted-foreground space-y-1 text-xs">
+                        <li>Series B too aggressive</li>
+                        <li>Competitors claim unsupported</li>
+                        <li>100% roadmap suspicious</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-neutral-400 mb-1">Missed</p>
+                      <ul className="text-muted-foreground/60 space-y-1 text-xs">
+                        <li>QoQ vs YoY confusion</li>
+                        <li>NPS benchmark not cited</li>
+                        <li>CAC without LTV context</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <div className="w-full bg-neutral-100 rounded-full h-2">
-                  <div
-                    className="bg-black h-2 rounded-full"
-                    style={{ width: `${EXAMPLE_WALKTHROUGH.catchRate}%` }}
-                  />
-                </div>
-              </div>
 
-              {/* Unique find */}
-              <div className="bg-black text-white rounded-xl p-5 space-y-2">
-                <p className="text-sm font-semibold flex items-center gap-2">
-                  <span>&#9733;</span> The user found what the AI didn&apos;t
-                </p>
-                <p className="text-sm text-white/70 pl-5 border-l-2 border-white/20">
-                  &ldquo;{EXAMPLE_WALKTHROUGH.uniqueFind}&rdquo;
-                </p>
-                <p className="text-xs text-white/40">
-                  This is human judgment at work. No machine flagged this.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-border" />
-
-          {/* Why It Matters */}
-          <div className="space-y-8">
-            <h2 className="text-3xl font-bold tracking-tight text-center">
-              Why it matters
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-card border border-border rounded-xl p-5 space-y-2">
-                <p className="text-sm font-semibold">Other AI tools</p>
-                <ul className="text-sm text-muted-foreground space-y-1.5">
-                  <li>Give you answers</li>
-                  <li>Make you faster</li>
-                  <li>Replace your judgment</li>
-                  <li>No feedback loop</li>
-                </ul>
-              </div>
-              <div className="bg-black text-white rounded-xl p-5 space-y-2">
-                <p className="text-sm font-semibold">Second Opinion</p>
-                <ul className="text-sm text-white/70 space-y-1.5">
-                  <li>Trains you to question answers</li>
-                  <li>Makes you sharper</li>
-                  <li>Builds your judgment</li>
-                  <li>Measurable improvement (catch rate %)</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Architecture */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold tracking-tight text-center">
-              Under the hood
-            </h2>
-            <div className="bg-card border border-border rounded-xl p-6 font-mono text-sm text-muted-foreground">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <span className="w-24 text-right text-xs text-muted-foreground/50">Frontend</span>
-                  <span className="flex-1 border-b border-dashed border-border" />
-                  <span>Next.js + React + Tailwind</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="w-24 text-right text-xs text-muted-foreground/50">Analysis</span>
-                  <span className="flex-1 border-b border-dashed border-border" />
-                  <span>Claude Opus (deep, accurate)</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="w-24 text-right text-xs text-muted-foreground/50">Scoring</span>
-                  <span className="flex-1 border-b border-dashed border-border" />
-                  <span>Claude Sonnet (fast)</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="w-24 text-right text-xs text-muted-foreground/50">Storage</span>
-                  <span className="flex-1 border-b border-dashed border-border" />
-                  <span>LocalStorage (no database)</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="w-24 text-right text-xs text-muted-foreground/50">Deploy</span>
-                  <span className="flex-1 border-b border-dashed border-border" />
-                  <span>Vercel</span>
+                {/* Unique find */}
+                <div className="bg-black text-white rounded-xl p-4 space-y-2">
+                  <p className="text-sm font-semibold flex items-center gap-2">
+                    <span>&#9733;</span> You found what the AI didn&apos;t
+                  </p>
+                  <p className="text-sm text-white/70 pl-5 border-l-2 border-white/20">
+                    &ldquo;One quarter isn&apos;t enough data to make major strategic decisions&rdquo;
+                  </p>
+                  <p className="text-xs text-white/40">
+                    This is human judgment at work.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* CTA */}
-          <div className="text-center space-y-4 pb-8">
-            <h2 className="text-2xl font-bold">Ready to test your judgment?</h2>
+          <div className="text-center pt-12 pb-8">
             <Link
               href="/"
               className="inline-block px-8 py-3 rounded-xl bg-black text-white font-semibold hover:bg-neutral-800 transition-colors"
             >
-              Try It Now
+              Try It Yourself
             </Link>
           </div>
         </div>
