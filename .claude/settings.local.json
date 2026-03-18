@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir --use-npm --no-import-alias)",
+      "Bash(npx create-next-app@latest second-opinion --typescript --tailwind --app --src-dir --use-npm --no-import-alias)",
+      "Bash(kill %1)",
+      "Bash(rm -rf /Users/specstan/Documents/SO/second-opinion)",
+      "Bash(npx create-next-app@latest second-opinion --typescript --tailwind --app --src-dir --use-npm --no-import-alias --eslint)",
+      "Bash(printf 'n\\\\nn\\\\n')",
+      "Bash(yes n:*)",
+      "Bash(npx create-next-app@latest /Users/specstan/Documents/SO/second-opinion --typescript --tailwind --app --src-dir --use-npm --no-import-alias --eslint)"
+    ]
+  }
+}
